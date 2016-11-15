@@ -1,0 +1,41 @@
+Mini-Projet
+A réaliser par groupe de 2 ou 3.
+
+On se propose de réaliser une application web J2EE, en respectant au mieux l'architecture MVC (DAO, JSP, Servlet).
+
+On utilise la base de données "sample" fournie avec NetBeans.
+
+Schéma de la base de données : les clients (CUSTOMER)passent des bons de commande (PURCHASE_ORDER),
+les bons de commandes référencent des produits(PRODUCT), les produits appartiennent a des catégories (PRODUCT_CODE),
+les catégories sont associées à un taux de remise (DISCOUNT_CODE).
+
+Fonctionnalités de l'application web à développer :
+
+
+
+Etape 1 :
+---------
+
+Le client doit s'authentifier pour accéder à l'édition des bons de commandes.
+
+On utilisera les champs suivants de la table CUSTOMER pour l'authentification :
+
+login : EMAIL
+password : CUSTOMER_ID
+
+Une fois connecté, l'application doit permettre au client l'édition complète des bons de commande (ajout, modification, suppression).
+
+
+
+Etape 2 :
+---------
+
+JavaScript / AJAX
+
+Afficher sous forme graphique de statistiques pour le client connecté
+
+par exemple: chiffre d'affaire par période, par catégorie d'articles...
+
+Pour ce faire, on utilisera la bibliothèque javascript Google Charts
+
+Note : les groupes peuvent proposer leur propre sujet, de complexité équivalente : base de données non triviale, possibilité de faire des ajouts/modifications dans la base, opportunité d'avoir une représentation graphique des données.
