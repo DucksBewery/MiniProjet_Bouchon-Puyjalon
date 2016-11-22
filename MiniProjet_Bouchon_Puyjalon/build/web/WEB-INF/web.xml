@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
+    <servlet>
+	<servlet-name>AuthentificationController</servlet-name>
+	<servlet-class>servlet.AuthentificationController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+	<servlet-name>AuthentificationController</servlet-name>
+	<url-pattern>/AuthentificationController</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>connection.html</welcome-file>
+        <welcome-file>AuthentificationController</welcome-file>
     </welcome-file-list>
 </web-app>

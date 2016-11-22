@@ -33,7 +33,7 @@ public class Customer {
 	public String getName() {
 		return name;
 	}
-
+        
 	/**
 	 * Get the value of addressLine1
 	 *
@@ -43,5 +43,16 @@ public class Customer {
 		return addressLine1;
 	}
 
-
+        
+        public void setCustomerId(int id){
+            this.customerId = id;
+        }
+        
+        public void setName(String nom){
+            this.name = nom;
+        }
+        
+        public void setAddressLine1(String address){
+           this.addressLine1 = address;
+        }
 }

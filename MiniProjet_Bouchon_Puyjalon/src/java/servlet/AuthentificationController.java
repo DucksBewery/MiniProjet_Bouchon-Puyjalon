@@ -7,12 +7,17 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+import jdbc.Customer;
 import jdbc.DataAccess;
 
 /**
@@ -34,7 +39,6 @@ public class AuthentificationController extends HttpServlet {
 		return ds;
     }	
     
-    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -46,38 +50,68 @@ public class AuthentificationController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        try {
-            // Créér le DAO avec sa source de données
-            DataAccess dao = new DataAccess(getDataSource());
-            // On récupère les paramètres de la requête
-            String email = request.getParameter("email");
-            String pswd = request.getParameter("id_client");
-            int mdp = Integer.parseInt(pswd);
-            String jspView; // La page à afficher
-            // En fonction des paramètres, on initialise les variables utilisées dans les JSP
-            // Et on choisit la vue (page JSP) à afficher
-            int res = dao.verifAuthentification(email);
-            String nom = dao.findNameOfCustomer(mdp);
-            if(res == mdp){
-                request.setAttribute("message", nom);
-                jspView = "authentifie.jsp";
-            } else {
-                request.setAttribute("messageErreur", "Identifiant ou mot de passe incorrect");
-                jspView = "erreur.jsp";
-             }
-             // On continue vers la page JSP sélectionnée
-             request.getRequestDispatcher(jspView).forward(request, response);
-             
-        } catch (Exception ex) {
-			// on stocke le message d'erreur pour utilisation dans la JSP
-			request.setAttribute("exception", ex.getMessage());
-			// On va vers la page d'affichage
-			request.getRequestDispatcher("erreur.jsp").forward(request, response);
-        }
-                        
-        
+            request.getSession(true);
+		// Quelle action a appelé cette servlet ?
+		String action = request.getParameter("action");
+		if (null != action) {
+			switch (action) {
+				case "login":
+					checkLogin(request);
+					break;
+				case "logout":
+					doLogout(request);
+					break;
+			}
+		}
+
+		// Est-ce que l'utilisateur est connecté ?
+		// On cherche l'attribut customer dans la session
+		Object utilisateur = findCustomerInSession(request);
+		String jspView;
+		if (null == utilisateur) { // L'utilisateur n'est pas connecté
+			// On choisit la page de login
+			jspView = "connection.jsp";
+
+		} else { // L'utilisateur est connecté
+			// On choisit la page d'affichage
+			jspView = "authentifie.jsp";
+		}
+		// On va vers la page choisie
+		request.getRequestDispatcher(jspView).forward(request, response);
     }
+    
+    private void checkLogin(HttpServletRequest request) {
+            // On récupère les paramètres de la requête
+            String login = request.getParameter("login");
+            String pswd = request.getParameter("id_client");
+            
+            try {
+                // Créér le DAO avec sa source de données
+                DataAccess dao = new DataAccess(getDataSource());
+                Customer utilisateur = dao.verifAuthentification(login,pswd);
+                if (utilisateur != null) { // On a trouvé la combinaison login / password
+				// On stocke l'utilisateur dans la session
+				HttpSession session = request.getSession(true); // démarre la session
+				session.setAttribute("utilisateur", utilisateur);
+				//List<PurchaseOrder> orders = dao.ordersForCustomer(utilisateur);
+				// On stocke la liste dans la requête
+			} else { // On positionne un message d'erreur pour l'afficher dans la JSP
+                                request.setAttribute("messageErreur", "Identifiant ou mot de passe incorrect");
+			}
+            } catch (SQLException ex) {
+			Logger.getLogger("MiniProjet_Bouchon_Puyjalon").log(Level.SEVERE, "SQL Exception", ex);
+            }
+    }
+        
+        private void doLogout(HttpServletRequest request) {
+		// On termine la session
+		request.getSession(false).invalidate();
+	}
+	
+	private Object findCustomerInSession(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		return (session == null) ? null : session.getAttribute("utilisateur");
+	}
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
