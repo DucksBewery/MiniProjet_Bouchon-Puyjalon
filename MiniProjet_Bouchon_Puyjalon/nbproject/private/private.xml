@@ -3,11 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/vince/Documents/FAC/Java/MiniProjet_Bouchon_Puyjalon%20V2/web/authentifie.jsp</file>
-            <file>file:/C:/Users/vince/Documents/FAC/Java/MiniProjet_Bouchon_Puyjalon%20V2/web/connection.jsp</file>
-            <file>file:/C:/Users/vince/Documents/FAC/Java/MiniProjet_Bouchon_Puyjalon%20V2/src/java/servlet/AuthentificationController.java</file>
-            <file>file:/C:/Users/vince/Documents/FAC/Java/MiniProjet_Bouchon_Puyjalon%20V2/src/java/jdbc/DataAccess.java</file>
-            <file>file:/C:/Users/vince/Documents/FAC/Java/MiniProjet_Bouchon_Puyjalon%20V2/web/accueil.jsp</file>
+            <file>file:/C:/Users/Margot/Desktop/MiniProjet_Bouchon_Puyjalon/web/ajout.jsp</file>
+            <file>file:/C:/Users/Margot/Desktop/MiniProjet_Bouchon_Puyjalon/web/authentifie.jsp</file>
+            <file>file:/C:/Users/Margot/Desktop/MiniProjet_Bouchon_Puyjalon/src/java/servlet/AddPurchaseController.java</file>
+            <file>file:/C:/Users/Margot/Desktop/MiniProjet_Bouchon_Puyjalon/web/accueil.jsp</file>
+            <file>file:/C:/Users/Margot/Desktop/MiniProjet_Bouchon_Puyjalon/web/connection.jsp</file>
+            <file>file:/C:/Users/Margot/Desktop/MiniProjet_Bouchon_Puyjalon/src/java/servlet/AuthentificationController.java</file>
+            <file>file:/C:/Users/Margot/Desktop/MiniProjet_Bouchon_Puyjalon/web/test.jsp</file>
         </group>
     </open-files>
 </project-private>

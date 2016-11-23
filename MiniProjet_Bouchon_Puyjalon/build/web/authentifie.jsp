@@ -17,7 +17,7 @@
         <h3>Il y a actuellement ${applicationScope.numberConnected} utilisateurs de cette application</h3>
         <form method="POST"> <!-- l'action par défaut est l'URL courant, qui va rappeler la servlet -->
             <input type='submit' name='action' value='logout'>
-            <a href="accueil.jsp">Accueil</a>
+            <a href="accueil.jsp" name='action' value='accueil'>Accueil</a>
         </form>
     </body>
 </html>

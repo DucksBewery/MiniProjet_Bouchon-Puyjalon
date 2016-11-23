@@ -15,16 +15,13 @@ and open the template in the editor.
             <h1>Bonjour : ${utilisateur.name}</h1>
 		<ul>
 			<li>
-				<a href="ajout.jsp">ajout BDC</a>
+				<a href="ajout.jsp" name="action" value="ajout">ajout BDC</a>
 			</li>
 			<li>
-				<a href="modif.jsp">mmodif BDC</a>
+				<a href="modification.jsp">mmodif BDC</a>
 			</li>
 			<li>
 				<a href="suppr.jsp">suppression BDC</a>
-			</li>
-                        <li>
-				<a href="./">retour</a>
 			</li>
 		</ul>
 	</body>

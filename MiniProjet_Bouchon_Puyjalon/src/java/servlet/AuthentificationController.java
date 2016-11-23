@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
-import jdbc.Customer;
-import jdbc.DataAccess;
+import models.Customer;
+import models.DataAccess;
 
 /**
  *
@@ -51,39 +51,42 @@ public class AuthentificationController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
             request.getSession(true);
+            String jspView = "accueil.jsp";
 		// Quelle action a appelé cette servlet ?
 		String action = request.getParameter("action");
 		if (null != action) {
 			switch (action) {
 				case "login":
-					checkLogin(request);
+					if(checkLogin(request)){
+                                            jspView = "authentifie.jsp";
+                                        }
 					break;
 				case "logout":
 					doLogout(request);
 					break;
+                                /*case "accueil":
+					jspView = "accueil.jsp";
+					break;*/
 			}
 		}
 
 		// Est-ce que l'utilisateur est connecté ?
 		// On cherche l'attribut customer dans la session
 		Object utilisateur = findCustomerInSession(request);
-		String jspView;
+		
 		if (null == utilisateur) { // L'utilisateur n'est pas connecté
 			// On choisit la page de login
 			jspView = "connection.jsp";
-
-		} else { // L'utilisateur est connecté
-			// On choisit la page d'affichage
-			jspView = "authentifie.jsp";
 		}
 		// On va vers la page choisie
 		request.getRequestDispatcher(jspView).forward(request, response);
     }
     
-    private void checkLogin(HttpServletRequest request) {
+    private boolean checkLogin(HttpServletRequest request) {
             // On récupère les paramètres de la requête
             String login = request.getParameter("login");
             String pswd = request.getParameter("id_client");
+            boolean test = false;
             
             try {
                 // Créér le DAO avec sa source de données
@@ -93,6 +96,7 @@ public class AuthentificationController extends HttpServlet {
 				// On stocke l'utilisateur dans la session
 				HttpSession session = request.getSession(true); // démarre la session
 				session.setAttribute("utilisateur", utilisateur);
+                                test = true;
 				//List<PurchaseOrder> orders = dao.ordersForCustomer(utilisateur);
 				// On stocke la liste dans la requête
 			} else { // On positionne un message d'erreur pour l'afficher dans la JSP
@@ -101,6 +105,7 @@ public class AuthentificationController extends HttpServlet {
             } catch (SQLException ex) {
 			Logger.getLogger("MiniProjet_Bouchon_Puyjalon").log(Level.SEVERE, "SQL Exception", ex);
             }
+        return test;
     }
         
         private void doLogout(HttpServletRequest request) {
