@@ -7,8 +7,9 @@ $(document).ready(// Exécuté à la fin du chargement de la page
             function () {
                     // On remplit le <select> avec les états existants
                     fillAvailableProducts();
+                    fillFreightCompanies();
                     // Quand on sélectionnne un nouvel état, on affiche les clients de cet état
-                    $("#listeProduits").change(showPurchaseDetails);
+                    $("#productList").change(showPurchaseDetails);
                     $("#quantite").change(showPurchaseDetails);
             }
 );
@@ -21,7 +22,7 @@ function fillAvailableProducts() {
                 error: showError,
                 success: // La fonction qui traite les résultats
                         function(result) {
-                                var select = $('#listeProduits');
+                                var select = $('#productList');
                                 // Pour chaque état dans le résultat
                                 $.each(result, 
                                         function(key) {
@@ -38,11 +39,32 @@ function fillAvailableProducts() {
         });								
 }
 
+function fillFreightCompanies(){
+        $.ajax({
+                url: "freightCompanies",
+                dataType: "json",
+                error: showError,
+                success: // La fonction qui traite les résultats
+                        function(result) {
+                                var select = $('#deliveryList');
+                                // Pour chaque état dans le résultat
+                                $.each(result, 
+                                        function(key) {
+                                                // On ajoute une option dans le select
+                                                var freightCompanyName = result[key];
+                                                var option = new Option(freightCompanyName, freightCompanyName);
+                                                select.append($(option));
+                                        }
+                                );		
+                        }
+        });		
+}
+
 			
 // Afficher les clients dans l'état sélectionné
 function showPurchaseDetails() {
         // Quel est le produit sélectionné ?
-        var selectedProduct = $("#listeProduits").val();	
+        var selectedProduct = $("#productList").val();	
         // On fait un appel AJAX pour chercher les informations liées à ce produit
         $.ajax({
                 url: "productInfoToJSON",

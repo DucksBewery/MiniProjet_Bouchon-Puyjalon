@@ -99,6 +99,27 @@ public class DataAccess {
                         }           
             return produits;
         }
+        
+        public List<String> getFreightCompanies() throws SQLException{
+                List<String> companies = new LinkedList<>();
+                String sql = "SELECT DISTINCT FREIGHT_COMPANY FROM PURCHASE_ORDER";
+                        // Ouvrir une connexion
+                        try(Connection connection = myDataSource.getConnection();
+                        // On crée un statement pour exécuter une requête
+                        Statement stmt = connection.createStatement()){
+                                // Un ResultSet pour parcourir les enregistrements du résultat
+                                try(ResultSet rs = stmt.executeQuery(sql)){
+                                        while (rs.next()) {
+                                                companies.add(rs.getString("FREIGHT_COMPANY"));
+                                        }
+                        	rs.close();
+                                }
+                        stmt.close();
+                        connection.close();
+                        }           
+            return companies;
+        }
+        
 
         
         public Product productInformations(int idProduct) throws SQLException{

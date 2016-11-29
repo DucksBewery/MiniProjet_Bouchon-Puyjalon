@@ -13,6 +13,7 @@ and open the template in the editor.
 	</head>
 	<body>
             <h1>Bonjour : ${utilisateur.name}</h1>
+            <p> ${message}</p>
 		<ul>
 			<li>
 				<a href="ajout.jsp" name="action" value="ajout">ajout BDC</a>

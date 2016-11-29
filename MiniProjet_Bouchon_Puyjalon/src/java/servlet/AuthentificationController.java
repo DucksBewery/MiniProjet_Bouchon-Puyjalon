@@ -64,9 +64,9 @@ public class AuthentificationController extends HttpServlet {
 				case "logout":
 					doLogout(request);
 					break;
-                                /*case "accueil":
+                                case "accueil":
 					jspView = "accueil.jsp";
-					break;*/
+					break;
 			}
 		}
 

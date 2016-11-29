@@ -8,6 +8,8 @@ package servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -48,52 +50,42 @@ public class AddPurchaseController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String action = request.getParameter("action");
-        String jspView;
+        String jspView = "accueil.jsp";
 		if (null != action) {
-                    jspView = "authentifie.jsp";
 			switch (action) {
 				case "confirmAjout":
-					jspView = "test.jsp";
+					if(addPurchaseOrderController(request)){
+                                            request.setAttribute("message","L'ajout du bon de commande a bien été pris en compte.");
+                                        }else{
+                                            request.setAttribute("message","Le bon de commande ne s'est pas enregistré correctement.");
+                                        }
 					break;
 				case "ajout":
 					jspView = "ajout.jsp";
 					break;
-                                case "accueil":
-					jspView = "accueil.jsp";
-					break;
 			}
 		}
-                else{jspView = "authentifie.jsp";}
                 request.getRequestDispatcher(jspView).forward(request, response);
-        /*try {
+        
+    }
+    
+    private boolean addPurchaseOrderController(HttpServletRequest request){
+            boolean test = false;
+           try {
             // Créér le DAO avec sa source de données
             DataAccess dao = new DataAccess(getDataSource());
             // On récupère les paramètres de la requête
             String productID = request.getParameter("product");
             String quantity = request.getParameter("qtt");
-            String freightCompany = request.getParameter("freightCompany");
-            int productIdInt = Integer.parseInt(productID);
-            int quantityInt = Integer.parseInt(quantity);
+            String freightCompany = request.getParameter("delivery");
+            String customerId = request.getParameter("userId");
             // En fonction des paramètres, on initialise les variables utilisées dans les JSP
             // Et on choisit la vue (page JSP) à afficher
-            boolean test = dao.addPurchaseOrder(1,productIdInt,quantityInt,freightCompany);
-            if (test){
-                request.setAttribute("message","L'ajout du bon de commande a bien été pris en compte.");
-                jspView = "authentifie.jsp";
-            }
-            else{
-                request.setAttribute("messageErreur","Le bon de commande ne s'est pas enregistré correctement.");
-                jspView = "erreur.jsp";
-            }
-            // On continue vers la page JSP sélectionnée
-            request.getRequestDispatcher(jspView).forward(request, response);
-             
+            test = dao.addPurchaseOrder(Integer.parseInt(customerId),Integer.parseInt(productID),Integer.parseInt(quantity),freightCompany);
         } catch (Exception ex) {
-			// on stocke le message d'erreur pour utilisation dans la JSP
-			request.setAttribute("exception", ex.getMessage());
-			// On va vers la page d'affichage
-			request.getRequestDispatcher("erreur.jsp").forward(request, response);
-        }*/
+            Logger.getLogger("MiniProjet_Bouchon_Puyjalon").log(Level.SEVERE, "SQL Exception", ex);
+        }
+           return test;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
