@@ -10,7 +10,7 @@ $(document).ready(// Exécuté à la fin du chargement de la page
                     fillFreightCompanies();
                     // Quand on sélectionnne un nouvel état, on affiche les clients de cet état
                     $("#productList").change(showPurchaseDetails);
-                    $("#quantite").change(showPurchaseDetails);
+                    $("#quantite").change(changeDetails);
             }
 );
 			
@@ -64,7 +64,7 @@ function fillFreightCompanies(){
 // Afficher les clients dans l'état sélectionné
 function showPurchaseDetails() {
         // Quel est le produit sélectionné ?
-        var selectedProduct = $("#productList").val();	
+        var selectedProduct = $("#productList").val();
         // On fait un appel AJAX pour chercher les informations liées à ce produit
         $.ajax({
                 url: "productInfoToJSON",
@@ -73,20 +73,43 @@ function showPurchaseDetails() {
                 success: // La fonction qui traite les résultats
                         function(result) {
                                 $("#infoOrder").empty();
-                                var qtt = $("#quantite").val();
+                                $("#quantite").val(1);
                                 var info = "<p>Produit sélectionné : "+result["description"]+"</p>"+
                                         "<p>Type : "+result["productType"]+"</p>"+
                                         "<p>Constructeur : "+result["manufacturer"]+"</p>"+
-                                        "<p id='quantiteProd'>Quantité : "+qtt+"</p>"+
-                                        "<p id='prixProd'> Prix : "+result["productCost"]*qtt+"€</p>";
+                                        "<p id='quantiteProd'>Quantité : 1</p>"+
+                                        "<p id='prixProd'> Prix : "+result["productCost"]+"€</p>";
                                 $("#infoOrder").append(info);
-                                $("#productName").value(result["description"]);
-                                $("#manufacturer").value(result["manufacturer"]);
-                                $("#productType").value(result["productType"]);
-                                $("#productCost").value(result["productCost"]);
+                                $("#productName").val(result["description"]);
+                                $("#manufacturer").val(result["manufacturer"]);
+                                $("#productType").val(result["productType"]);
+                                $("#productCost").val(result["productCost"]);
+                                $("#quantityMax").val(result["quantityInStock"]);
+                                $("#quantite").attr({"max" : result["quantityInStock"]});
                         },
                 error: showError
         });				
+}
+
+function changeDetails(){
+        $("#infoOrder").empty();
+        var qtt = $("#quantite").val();
+        var max = $("#quantite").attr("max");
+        if(qtt>max){
+            var info = "<p>Produit sélectionné : "+$("#productName").val()+"</p>"+
+                "<p>Type : "+$("#productType").val()+"</p>"+
+                "<p>Constructeur : "+$("#manufacturer").val()+"</p>"+
+                "<p id='quantiteProd' style='color:red;'>Quantité : Veuillez sélectionner une valeur inférieure ou égale à "+max+"</p>"+
+                "<p id='prixProd'> Prix :  €</p>";
+        }
+        else{
+            var info = "<p>Produit sélectionné : "+$("#productName").val()+"</p>"+
+                "<p>Type : "+$("#productType").val()+"</p>"+
+                "<p>Constructeur : "+$("#manufacturer").val()+"</p>"+
+                "<p id='quantiteProd'>Quantité : "+qtt+"</p>"+
+                "<p id='prixProd'> Prix : "+$("#productCost").val()*qtt+"€</p>";
+        }
+        $("#infoOrder").append(info);
 }
 
 // Fonction qui traite les erreurs de la requête

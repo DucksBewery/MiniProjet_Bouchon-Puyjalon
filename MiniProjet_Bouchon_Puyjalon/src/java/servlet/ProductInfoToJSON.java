@@ -63,11 +63,11 @@ public class ProductInfoToJSON extends HttpServlet {
 			// Créér le DAO avec sa source de données
 			DataAccess dao = new DataAccess(getDataSource());
 
-			Product produit = dao.productInformations(prodInt);
+			Product product = dao.productInformations(prodInt);
 
 			// Générer du JSON
 			Gson gson = new Gson();
-			String gsonData = gson.toJson(produit);
+			String gsonData = gson.toJson(product);
 			out.println(gsonData);
 			
 		} catch (Exception ex) {

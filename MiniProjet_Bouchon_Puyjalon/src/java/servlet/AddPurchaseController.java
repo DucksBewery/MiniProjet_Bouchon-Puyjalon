@@ -53,16 +53,16 @@ public class AddPurchaseController extends HttpServlet {
         String jspView = "accueil.jsp";
 		if (null != action) {
 			switch (action) {
+                                case "ajout":
+					jspView = "ajout.jsp";
+					break;
 				case "confirmAjout":
 					if(addPurchaseOrderController(request)){
                                             request.setAttribute("message","L'ajout du bon de commande a bien été pris en compte.");
                                         }else{
                                             request.setAttribute("message","Le bon de commande ne s'est pas enregistré correctement.");
                                         }
-					break;
-				case "ajout":
-					jspView = "ajout.jsp";
-					break;
+					break;	
 			}
 		}
                 request.getRequestDispatcher(jspView).forward(request, response);
@@ -79,9 +79,9 @@ public class AddPurchaseController extends HttpServlet {
             String quantity = request.getParameter("qtt");
             String freightCompany = request.getParameter("delivery");
             String customerId = request.getParameter("userId");
-            // En fonction des paramètres, on initialise les variables utilisées dans les JSP
-            // Et on choisit la vue (page JSP) à afficher
-            test = dao.addPurchaseOrder(Integer.parseInt(customerId),Integer.parseInt(productID),Integer.parseInt(quantity),freightCompany);
+            String quantityMax = request.getParameter("quantityMax");
+
+            test = dao.addPurchaseOrder(Integer.parseInt(customerId),Integer.parseInt(productID),Integer.parseInt(quantity),Integer.parseInt(quantityMax),freightCompany);
         } catch (Exception ex) {
             Logger.getLogger("MiniProjet_Bouchon_Puyjalon").log(Level.SEVERE, "SQL Exception", ex);
         }

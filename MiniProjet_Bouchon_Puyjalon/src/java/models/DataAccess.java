@@ -51,15 +51,23 @@ public class DataAccess {
             return utilisateur;
         }
         
-         public boolean addPurchaseOrder(int customerId, int productId, int quantity, String freightCompany) throws SQLException{
+         public boolean addPurchaseOrder(int customerId, int productId, int quantity, int quantityMax, String freightCompany) throws SQLException{
                 boolean result = false;
-                //ajouter une requete pour diminuer le nombre de produit disponible
+                String sql2;
                 String sql = "INSERT INTO PURCHASE_ORDER " +
                     "VALUES ((SELECT MAX(ORDER_NUM) FROM PURCHASE_ORDER)+1,?,?,?,(SELECT PURCHASE_COST FROM PRODUCT WHERE PRODUCT_ID = ?)*?,CURRENT_DATE,CURRENT_DATE,?)";
+                if(quantityMax-quantity == 0){
+                        sql2 = "UPDATE PRODUCT SET QUANTITY_ON_HAND = ?, AVAILABLE = 'FALSE' WHERE PRODUCT_ID = ?";
+                }
+                else{
+                        sql2 = "UPDATE PRODUCT SET QUANTITY_ON_HAND = ? WHERE PRODUCT_ID = ?";
+                }
+                
                 try ( // Ouvrir une connexion
                 Connection connection = myDataSource.getConnection();
                 // On crée un statement pour exécuter une requête
-                PreparedStatement stmt = connection.prepareStatement(sql)) {
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                PreparedStatement stmt2 = connection.prepareStatement(sql2)) {
                         stmt.setInt(1, customerId);
                         stmt.setInt(2, productId);
                         stmt.setInt(3, quantity);
@@ -67,11 +75,17 @@ public class DataAccess {
                         stmt.setInt(5, quantity);
                         stmt.setString(6, freightCompany);
                         
+                        stmt2.setInt(1, quantityMax-quantity);
+                        stmt2.setInt(2, productId);
+                        
                         int rs = stmt.executeUpdate();
-                        if (rs != 0){
+                        int rs2 = stmt2.executeUpdate();
+                        if (rs != 0 && rs2 != 0){
                                 result = true;
                         }
+                        
                         stmt.close();
+                        stmt2.close();
                         connection.close();
                 }
                 return result;
@@ -79,7 +93,7 @@ public class DataAccess {
         
         public List<Product> availableProductsList() throws SQLException{
                 List<Product> produits = new LinkedList<>();
-                String sql = "SELECT PRODUCT_ID,DESCRIPTION FROM APP.PRODUCT WHERE AVAILABLE = TRUE";
+                String sql = "SELECT PRODUCT_ID,DESCRIPTION FROM APP.PRODUCT WHERE AVAILABLE = 'TRUE'";
                         // Ouvrir une connexion
                         try(Connection connection = myDataSource.getConnection();
                         // On crée un statement pour exécuter une requête
