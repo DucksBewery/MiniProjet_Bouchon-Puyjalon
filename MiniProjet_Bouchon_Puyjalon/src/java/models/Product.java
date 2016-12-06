@@ -1,21 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package models;
 
-/**
- *
- * @author マルゴ
- */
+
 public class Product {
-    // TODO : ajouter les autres propriétés
+    
 	private String description;
         private int productId;
         private String manufacturer;
         private String productType;
         private float productCost;
+        private float productRate;
         private int quantityInStock;
 
 	public Product(int productId) {
@@ -55,6 +48,13 @@ public class Product {
      */
     public float getProductCost() {
         return productCost;
+    }
+    
+    /**
+     * @return the productRate
+     */
+    public float getProductRate() {
+        return productRate;
     }
 
     /**
@@ -97,6 +97,13 @@ public class Product {
      */
     public void setProductCost(float productCost) {
         this.productCost = productCost;
+    }
+    
+    /**
+     * @param productRate the productCost to set
+     */
+    public void setProductRate(float productRate) {
+        this.productRate = productRate;
     }
 
     /**

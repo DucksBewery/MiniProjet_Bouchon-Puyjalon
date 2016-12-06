@@ -21,12 +21,12 @@ import models.DataAccess;
 
 /**
  *
- * @author マルゴ
+ * @author Margot
  */
-@WebServlet(name = "AddPurchaseController", urlPatterns = {"/AddPurchaseController"})
-public class AddPurchaseController extends HttpServlet {
+@WebServlet(name = "UpdateOrderController", urlPatterns = {"/UpdateOrderController"})
+public class UpdateOrderController extends HttpServlet {
 
-    public DataSource getDataSource() throws SQLException {
+   public DataSource getDataSource() throws SQLException {
         org.apache.derby.jdbc.ClientDataSource ds = new org.apache.derby.jdbc.ClientDataSource();
         ds.setDatabaseName("sample");
         ds.setUser("app");

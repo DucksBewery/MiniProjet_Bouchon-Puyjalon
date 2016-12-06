@@ -17,18 +17,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-import models.Product;
+
 import com.google.gson.*;
 import static java.lang.Integer.parseInt;
 
 import models.DataAccess;
+import models.Product;
+import models.PurchaseOrder;
 
 /**
  *
  * @author rbastide
  */
-@WebServlet(name = "productInfoToJSON", urlPatterns = {"/productInfoToJSON"})
-public class ProductInfoToJSON extends HttpServlet {
+@WebServlet(name = "purchaseToUpdate", urlPatterns = {"/purchaseToUpdate"})
+public class PurchaseToUpdateToJSON extends HttpServlet {
 
 	public DataSource getDataSource() throws SQLException {
 		org.apache.derby.jdbc.ClientDataSource ds = new org.apache.derby.jdbc.ClientDataSource();
@@ -52,24 +54,18 @@ public class ProductInfoToJSON extends HttpServlet {
 	 */
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException {
-
 		response.setContentType("application/json;charset=UTF-8");
-
-		
 		try (PrintWriter out = response.getWriter()) {
-			// Trouver la valeur du paramètre HTTP state
-			String prod = request.getParameter("prod");
-                        int prodInt = parseInt(prod);
+
 			// Créér le DAO avec sa source de données
 			DataAccess dao = new DataAccess(getDataSource());
-
-			Product product = dao.productInformations(prodInt);
-
+			List<PurchaseOrder> purchases = dao.updatablePurchaseList(parseInt(request.getParameter("customer")));
+			
 			// Générer du JSON
 			Gson gson = new Gson();
-			String gsonData = gson.toJson(product);
+			String gsonData = gson.toJson(purchases);
 			out.println(gsonData);
-			
+
 		} catch (Exception ex) {
 			Logger.getLogger("JSONServlet").log(Level.SEVERE, "Action en erreur", ex);
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());

@@ -18,7 +18,7 @@ and open the template in the editor.
             <h2>Actions disponibes</h2>
 		<ul>
 			<li>
-                            <a href="ajout.jsp" name="action" value="ajout">Création d'un bon de commande</a>
+                            <a href="ajout.jsp" name="action" value="ajout">CrÃ©ation d'un bon de commande</a>
 			</li>
 			<li>
                             <a href="modification.jsp">mmodif BDC</a>
@@ -33,7 +33,7 @@ and open the template in the editor.
                             <a href="googlePieChartCustomer.jsp">Afficher les statistiques de l'utilisateur</a>
 			</li>
 		</ul>
-            <form method="POST" action="AuthentificationController"> <!-- l'action par défaut est l'URL courant, qui va rappeler la servlet -->
+            <form method="POST" action="AuthentificationController"> <!-- l'action par dÃ©faut est l'URL courant, qui va rappeler la servlet -->
             <input type='submit' name='action' value='logout'>
             </form>
             
