@@ -3,13 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/pitit/Documents/GitHub/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/web/modification.jsp</file>
-            <file>file:/C:/Users/pitit/Documents/GitHub/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/src/java/models/DataAccess.java</file>
-            <file>file:/C:/Users/pitit/Documents/GitHub/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/web/ajout.jsp</file>
-            <file>file:/C:/Users/pitit/Documents/GitHub/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/src/java/servlet/PurchaseToUpdateToJSON.java</file>
-            <file>file:/C:/Users/pitit/Documents/GitHub/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/src/java/servlet/UpdateOrderController.java</file>
-            <file>file:/C:/Users/pitit/Documents/GitHub/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/web/js/updateOrder.js</file>
-            <file>file:/C:/Users/pitit/Documents/GitHub/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/src/java/servlet/ProductInfoToJSON.java</file>
+            <file>file:/C:/Users/pitit/Downloads/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/web/js/deleteOrder.js</file>
+            <file>file:/C:/Users/pitit/Downloads/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/src/java/models/DataAccess.java</file>
+            <file>file:/C:/Users/pitit/Downloads/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/src/java/servlet/DeletePurchaseController.java</file>
+            <file>file:/C:/Users/pitit/Downloads/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/src/java/servlet/PurchaseToUpdateToJSON.java</file>
+            <file>file:/C:/Users/pitit/Downloads/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/src/java/servlet/SelectorsToJSON.java</file>
+            <file>file:/C:/Users/pitit/Downloads/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/web/suppr.jsp</file>
+            <file>file:/C:/Users/pitit/Downloads/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/web/js/updateOrder.js</file>
         </group>
     </open-files>
 </project-private>

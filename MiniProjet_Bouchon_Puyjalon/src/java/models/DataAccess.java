@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.sql.DataSource;
 
 public class DataAccess {
@@ -89,6 +92,88 @@ public class DataAccess {
         return result;
     }
 
+    public boolean updatePurchaseOrder(int purchaseId, int productId, int quantity, float totalCost, String freightCompany, int quantityMax) throws SQLException {
+        boolean result = false;
+        String sql2;
+        String sql = "UPDATE PURCHASE_ORDER "
+                + "SET PRODUCT_ID = ?, QUANTITY = ?, SHIPPING_COST = ?, SALES_DATE = CURRENT_DATE, FREIGHT_COMPANY = ?"
+                + "WHERE ORDER_NUM = ?";
+        if (quantityMax - quantity == 0) {
+            sql2 = "UPDATE PRODUCT SET QUANTITY_ON_HAND = ?, AVAILABLE = 'FALSE' WHERE PRODUCT_ID = ?";
+        } else {
+            sql2 = "UPDATE PRODUCT SET QUANTITY_ON_HAND = ? WHERE PRODUCT_ID = ?";
+        }
+
+        try ( // Ouvrir une connexion
+                Connection connection = myDataSource.getConnection();
+                // On crée un statement pour exécuter une requête
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                PreparedStatement stmt2 = connection.prepareStatement(sql2)) {
+            stmt.setInt(1, productId);
+            stmt.setInt(2, quantity);
+            stmt.setFloat(3, totalCost);
+            stmt.setString(4, freightCompany);
+            stmt.setInt(5, purchaseId);
+
+            stmt2.setInt(1, quantityMax - quantity);
+            stmt2.setInt(2, productId);
+
+            int rs = stmt.executeUpdate();
+            int rs2 = stmt2.executeUpdate();
+            if (rs != 0 && rs2 != 0) {
+                result = true;
+            }
+
+            stmt.close();
+            stmt2.close();
+            connection.close();
+        }
+        return result;
+    }
+    
+    public boolean deletePurchaseOrder(int purchaseId) throws SQLException {
+        boolean result = false;
+        String sql = "DELETE FROM PURCHASE_ORDER WHERE ORDER_NUM = ?";
+                
+        try ( // Ouvrir une connexion
+                Connection connection = myDataSource.getConnection();
+                // On crée un statement pour exécuter une requête
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, purchaseId);
+            
+            int rs = stmt.executeUpdate();
+            if (rs != 0) {
+                result = true;
+            }
+
+            stmt.close();
+            connection.close();
+        }
+        return result;
+    }
+    
+    public boolean refillProduct(int productId, int quantity) throws SQLException {
+        boolean result = false;
+        String sql = "UPDATE PRODUCT SET QUANTITY_ON_HAND = QUANTITY_ON_HAND + ?, AVAILABLE = 'TRUE' WHERE PRODUCT_ID = ?";
+                
+        try ( // Ouvrir une connexion
+                Connection connection = myDataSource.getConnection();
+                // On crée un statement pour exécuter une requête
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, quantity);
+            stmt.setInt(2, productId);
+            
+            int rs = stmt.executeUpdate();
+            if (rs != 0) {
+                result = true;
+            }
+
+            stmt.close();
+            connection.close();
+        }
+        return result;
+    }
+
     public List<Product> availableProductsList() throws SQLException {
         List<Product> produits = new LinkedList<>();
         String sql = "SELECT PRODUCT_ID,DESCRIPTION FROM APP.PRODUCT WHERE AVAILABLE = 'TRUE' ORDER BY DESCRIPTION";
@@ -114,10 +199,10 @@ public class DataAccess {
 
     public List<PurchaseOrder> updatablePurchaseList(int customer) throws SQLException {
         List<PurchaseOrder> purchases = new LinkedList<>();
-        String sql = "SELECT o.ORDER_NUM, p.DESCRIPTION AS PRODUIT, o.QUANTITY, o.SHIPING_COST, o.FREIGHT_COMPANY "
+        String sql = "SELECT o.ORDER_NUM, p.PRODUCT_ID, p.DESCRIPTION AS PRODUIT, o.QUANTITY, o.SHIPPING_COST, o.FREIGHT_COMPANY "
                 + "FROM PURCHASE_ORDER o "
                 + "INNER JOIN PRODUCT p ON (p.PRODUCT_ID = o.PRODUCT_ID)"
-                + "WHERE o.CUSTOMER_ID = ?"
+                + "WHERE o.CUSTOMER_ID = ? AND o.SHIPPING_DATE IS NULL "
                 + "ORDER BY o.SALES_DATE DESC";
         // Ouvrir une connexion
         try (Connection connection = myDataSource.getConnection();
@@ -130,15 +215,20 @@ public class DataAccess {
                     PurchaseOrder purchase = new PurchaseOrder(customer);
                     purchase.setPurchaseId(rs.getInt("ORDER_NUM"));
                     purchase.setProduct(rs.getString("PRODUIT"));
+                    purchase.setProductId(rs.getInt("PRODUCT_ID"));
                     purchase.setQuantity(rs.getInt("QUANTITY"));
                     purchase.setCost(rs.getFloat("SHIPPING_COST"));
                     purchase.setFreightCompany(rs.getString("FREIGHT_COMPANY"));
                     purchases.add(purchase);
                 }
                 rs.close();
+            } catch (SQLException e) {
+                System.out.println("PROBLEME : " + e);
             }
             stmt.close();
             connection.close();
+        } catch (SQLException e) {
+            System.out.println("PROBLEME : " + e);
         }
         return purchases;
     }
@@ -187,46 +277,105 @@ public class DataAccess {
                     produit.setQuantityInStock(rs.getInt("QUANTITY_ON_HAND"));
                 }
                 rs.close();
+            } catch (SQLException e) {
+                System.out.println("PROBLEME : " + e);
             }
             stmt.close();
             connection.close();
+        } catch (SQLException e) {
+            System.out.println("PROBLEME : " + e);
         }
 
         return produit;
     }
-    
-    public Product purchaseInformations(int idProduct) throws SQLException {
-        Product produit = new Product(idProduct);
-        String sql = "SELECT o.ORDER_NUM, p.DESCRIPTION AS PRODUIT, o.QUANTITY, m.\"NAME\" AS MANUFACTURER, pc.DESCRIPTION AS TYPE, p.PURCHASE_COST, p.QUANTITY_ON_HAND, d.RATE "
-                + "FROM PURCHASE_ORDER o "
-                + "INNER JOIN PRODUCT p ON (p.PRODUCT_ID = o.PRODUCT_ID)"
-                + "INNER JOIN MANUFACTURER m ON (p.MANUFACTURER_ID = m.MANUFACTURER_ID)"
-                + "INNER JOIN PRODUCT_CODE pc ON (p.PRODUCT_CODE = pc.PROD_CODE)"
-                + "INNER JOIN DISCOUNT_CODE d ON (pc.DISCOUNT_CODE = d.DISCOUNT_CODE)"
-                + "WHERE o.CUSTOMER_ID = ?"
-                + "ORDER BY o.SALES_DATE DESC";
+
+    public ArrayList<String> selectorsInformations(int idPurchase) throws SQLException {
+        ArrayList<String> selectors = new ArrayList<>();
+        String sql = "SELECT o.PRODUCT_ID, p.DESCRIPTION, QUANTITY, FREIGHT_COMPANY FROM PURCHASE_ORDER o INNER JOIN PRODUCT p ON (p.PRODUCT_ID=o.PRODUCT_ID) WHERE ORDER_NUM = ?";
         try ( // Ouvrir une connexion
                 Connection connection = myDataSource.getConnection();
                 // On crée un statement pour exécuter une requête
                 PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, idProduct);
+            stmt.setInt(1, idPurchase);
             try ( // Un ResultSet pour parcourir les enregistrements du résultat
                     ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    produit.setManufacturer(rs.getString("MANUFACTURER_NAME"));
-                    produit.setDescription(rs.getString("DESCRIPTION"));
-                    produit.setProductCost(rs.getFloat("PURCHASE_COST"));
-                    produit.setProductRate(rs.getFloat("RATE"));
-                    produit.setProductType(rs.getString("PROD_TYPE"));
-                    produit.setQuantityInStock(rs.getInt("QUANTITY_ON_HAND"));
+                    selectors.add(rs.getString("DESCRIPTION"));
+                    selectors.add(rs.getString("QUANTITY"));
+                    selectors.add(rs.getString("FREIGHT_COMPANY"));
+                    selectors.add(rs.getString("PRODUCT_ID"));
                 }
                 rs.close();
+            } catch (SQLException e) {
+                System.out.println("PROBLEME : " + e);
             }
             stmt.close();
             connection.close();
+        } catch (SQLException e) {
+            System.out.println("PROBLEME : " + e);
         }
 
-        return produit;
+        return selectors;
     }
-    
+
+    /**
+     * ventes par client
+     *
+     * @return Une Map associant le nom du client à son chiffre d'affaires
+     * @throws SQLException
+     */
+    public Map<String, Double> salesByCustomer() throws SQLException {
+        Map<String, Double> result = new HashMap<>();
+        String sql = "SELECT NAME, SUM(PURCHASE_COST * QUANTITY) AS SALES"
+                + "	      FROM CUSTOMER c"
+                + "	      INNER JOIN PURCHASE_ORDER o ON (c.CUSTOMER_ID = o.CUSTOMER_ID)"
+                + "	      INNER JOIN PRODUCT p ON (o.PRODUCT_ID = p.PRODUCT_ID)"
+                + "	      GROUP BY NAME";
+        try (Connection connection = myDataSource.getConnection();
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                // On récupère les champs nécessaires de l'enregistrement courant
+                String name = rs.getString("NAME");
+                double sales = rs.getDouble("SALES");
+                // On l'ajoute à la liste des résultats
+                result.put(name, sales);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * ventes par client
+     *
+     * @param customerId
+     * @return Une Map associant le nom du client à son chiffre d'affaires
+     * @throws SQLException
+     */
+    public Map<String, Double> salesByOneCustomer(int customerId) throws SQLException {
+        Map<String, Double> result = new HashMap<>();
+
+        String sql = "SELECT SUM(po.QUANTITY) AS SALES, p.DESCRIPTION"
+                + "	      FROM PURCHASE_ORDER po"
+                + "	      INNER JOIN PRODUCT p ON (po.PRODUCT_ID = p.PRODUCT_ID)"
+                + "	      WHERE po.CUSTOMER_ID = ? GROUP BY p.DESCRIPTION";
+        try (Connection connection = myDataSource.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, customerId);
+            try ( // Un ResultSet pour parcourir les enregistrements du résultat
+                    ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    // On récupère les champs nécessaires de l'enregistrement courant
+                    String name = rs.getString("DESCRIPTION");
+                    double sales = rs.getDouble("SALES");
+                    // On l'ajoute à la liste des résultats
+                    result.put(name, sales);
+                }
+            } catch (SQLException e) {
+                System.out.println("PROBLEME : " + e);
+            }
+        }
+        return result;
+    }
+
 }
