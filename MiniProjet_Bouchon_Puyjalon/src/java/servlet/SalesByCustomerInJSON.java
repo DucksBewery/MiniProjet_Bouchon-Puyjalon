@@ -8,7 +8,6 @@ package servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -17,9 +16,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-import models.Product;
+
 import com.google.gson.*;
-import static java.lang.Integer.parseInt;
 
 import models.DataAccess;
 
@@ -27,8 +25,8 @@ import models.DataAccess;
  *
  * @author rbastide
  */
-@WebServlet(name = "productInfoToJSON", urlPatterns = {"/productInfoToJSON"})
-public class ProductInfoToJSON extends HttpServlet {
+@WebServlet(name = "salesByCustomer", urlPatterns = {"/salesByCustomer"})
+public class SalesByCustomerInJSON extends HttpServlet {
 
 	public DataSource getDataSource() throws SQLException {
 		org.apache.derby.jdbc.ClientDataSource ds = new org.apache.derby.jdbc.ClientDataSource();
@@ -57,19 +55,12 @@ public class ProductInfoToJSON extends HttpServlet {
 
 		
 		try (PrintWriter out = response.getWriter()) {
-			// Trouver la valeur du paramètre HTTP state
-			String prod = request.getParameter("prod");
-                        int prodInt = parseInt(prod);
 			// Créér le DAO avec sa source de données
 			DataAccess dao = new DataAccess(getDataSource());
-
-			Product produit = dao.productInformations(prodInt);
-
 			// Générer du JSON
 			Gson gson = new Gson();
-			String gsonData = gson.toJson(produit);
-			out.println(gsonData);
-			
+			String gsonData = gson.toJson(dao.salesByCustomer());
+			out.println(gsonData);			
 		} catch (Exception ex) {
 			Logger.getLogger("JSONServlet").log(Level.SEVERE, "Action en erreur", ex);
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());

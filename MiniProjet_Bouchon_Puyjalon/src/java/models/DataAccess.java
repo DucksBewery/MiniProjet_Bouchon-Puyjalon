@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.sql.DataSource;
 
 public class DataAccess {
@@ -24,7 +26,8 @@ public class DataAccess {
 
         /**
          * 
-         * @param email
+     * @param login
+     * @param mdp
          * @return l'identifiant correspondant au mail saisi
          * @throws SQLException 
          */
@@ -51,23 +54,15 @@ public class DataAccess {
             return utilisateur;
         }
         
-         public boolean addPurchaseOrder(int customerId, int productId, int quantity, int quantityMax, String freightCompany) throws SQLException{
+         public boolean addPurchaseOrder(int customerId, int productId, int quantity, String freightCompany) throws SQLException{
                 boolean result = false;
-                String sql2;
+                //ajouter une requete pour diminuer le nombre de produit disponible
                 String sql = "INSERT INTO PURCHASE_ORDER " +
                     "VALUES ((SELECT MAX(ORDER_NUM) FROM PURCHASE_ORDER)+1,?,?,?,(SELECT PURCHASE_COST FROM PRODUCT WHERE PRODUCT_ID = ?)*?,CURRENT_DATE,CURRENT_DATE,?)";
-                if(quantityMax-quantity == 0){
-                        sql2 = "UPDATE PRODUCT SET QUANTITY_ON_HAND = ?, AVAILABLE = 'FALSE' WHERE PRODUCT_ID = ?";
-                }
-                else{
-                        sql2 = "UPDATE PRODUCT SET QUANTITY_ON_HAND = ? WHERE PRODUCT_ID = ?";
-                }
-                
                 try ( // Ouvrir une connexion
                 Connection connection = myDataSource.getConnection();
                 // On crée un statement pour exécuter une requête
-                PreparedStatement stmt = connection.prepareStatement(sql);
-                PreparedStatement stmt2 = connection.prepareStatement(sql2)) {
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
                         stmt.setInt(1, customerId);
                         stmt.setInt(2, productId);
                         stmt.setInt(3, quantity);
@@ -75,17 +70,11 @@ public class DataAccess {
                         stmt.setInt(5, quantity);
                         stmt.setString(6, freightCompany);
                         
-                        stmt2.setInt(1, quantityMax-quantity);
-                        stmt2.setInt(2, productId);
-                        
                         int rs = stmt.executeUpdate();
-                        int rs2 = stmt2.executeUpdate();
-                        if (rs != 0 && rs2 != 0){
+                        if (rs != 0){
                                 result = true;
                         }
-                        
                         stmt.close();
-                        stmt2.close();
                         connection.close();
                 }
                 return result;
@@ -93,7 +82,7 @@ public class DataAccess {
         
         public List<Product> availableProductsList() throws SQLException{
                 List<Product> produits = new LinkedList<>();
-                String sql = "SELECT PRODUCT_ID,DESCRIPTION FROM APP.PRODUCT WHERE AVAILABLE = 'TRUE'";
+                String sql = "SELECT PRODUCT_ID,DESCRIPTION FROM APP.PRODUCT WHERE AVAILABLE = TRUE";
                         // Ouvrir une connexion
                         try(Connection connection = myDataSource.getConnection();
                         // On crée un statement pour exécuter une requête
@@ -165,4 +154,65 @@ public class DataAccess {
                                    
                 return produit;
         }
+
+    /**
+	 * ventes par client
+	 *
+	 * @return Une Map associant le nom du client à son chiffre d'affaires
+	 * @throws SQLException
+	 */
+	public Map<String, Double> salesByCustomer() throws SQLException {
+		Map<String, Double> result = new HashMap<>();
+		String sql = "SELECT NAME, SUM(PURCHASE_COST * QUANTITY) AS SALES" +
+		"	      FROM CUSTOMER c" +
+		"	      INNER JOIN PURCHASE_ORDER o ON (c.CUSTOMER_ID = o.CUSTOMER_ID)" +
+		"	      INNER JOIN PRODUCT p ON (o.PRODUCT_ID = p.PRODUCT_ID)" +
+		"	      GROUP BY NAME";
+		try (Connection connection = myDataSource.getConnection(); 
+		     Statement stmt = connection.createStatement(); 
+		     ResultSet rs = stmt.executeQuery(sql)) {
+			while (rs.next()) {
+				// On récupère les champs nécessaires de l'enregistrement courant
+				String name = rs.getString("NAME");
+				double sales = rs.getDouble("SALES");
+				// On l'ajoute à la liste des résultats
+				result.put(name, sales);
+			}
+		}
+		return result;
+	}
+        
+        /**
+	 * ventes par client
+	 *
+     * @param customerId
+	 * @return Une Map associant le nom du client à son chiffre d'affaires
+	 * @throws SQLException
+	 */
+	public Map<String, Double> salesByOneCustomer(int customerId) throws SQLException {
+		Map<String, Double> result = new HashMap<>();
+                    
+
+		String sql = "SELECT SUM(po.QUANTITY) AS SALES, p.DESCRIPTION" +
+		"	      FROM PURCHASE_ORDER po" +
+		"	      INNER JOIN PRODUCT p ON (po.PRODUCT_ID = p.PRODUCT_ID)" +
+		"	      WHERE po.CUSTOMER_ID = ? GROUP BY p.DESCRIPTION";
+		try (Connection connection = myDataSource.getConnection(); 
+		     PreparedStatement stmt = connection.prepareStatement(sql)){ 
+		     stmt.setInt(1, customerId);
+                        try ( // Un ResultSet pour parcourir les enregistrements du résultat
+                        ResultSet rs = stmt.executeQuery()) {
+                                while(rs.next()) {
+                                    // On récupère les champs nécessaires de l'enregistrement courant
+                                    String name = rs.getString("DESCRIPTION");
+                                    double sales = rs.getDouble("SALES");
+                                    // On l'ajoute à la liste des résultats
+                                    result.put(name, sales);
+                                }
+                        }
+                        catch(SQLException e){System.out.println("PROBLEME : "+e);}
+		}
+		return result;
+	}
+        
 }
