@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-	<head>
-		<title>COURS JAVA</title>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <link rel="stylesheet" media="screen" type="text/css" title="stylepage" href="style.css">
-	</head>
-	<body>
+ <%@include file="entete.jsp" %>
             <h1>Bonjour : ${utilisateur.name}</h1>
             <p> ${message}</p>
             
@@ -33,9 +20,6 @@ and open the template in the editor.
                             <a href="googlePieChartCustomer.jsp">Afficher les statistiques de l'utilisateur</a>
 			</li>
 		</ul>
-            <form method="POST" action="AuthentificationController"> <!-- l'action par défaut est l'URL courant, qui va rappeler la servlet -->
-            <input type='submit' name='action' value='logout'>
-            </form>
             
 	</body>
 </html>

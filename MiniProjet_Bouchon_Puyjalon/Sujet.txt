@@ -32,7 +32,7 @@ Etape 2 :
 
 JavaScript / AJAX
 
-Afficher sous forme graphique de statistiques pour le client connecté
+Afficher sous forme graphique des statistiques pour le client connecté
 
 par exemple: chiffre d'affaire par période, par catégorie d'articles...
 

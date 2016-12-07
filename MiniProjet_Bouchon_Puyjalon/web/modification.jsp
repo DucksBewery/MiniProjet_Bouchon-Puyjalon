@@ -1,8 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="entete.jsp" %>
-
-<body>
-
     <h1>Modification d'un bon de commande</h1>
 
     <form method="POST" action="AddPurchaseController">

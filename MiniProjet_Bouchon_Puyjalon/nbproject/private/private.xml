@@ -3,13 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/pitit/Documents/GitHub/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/web/modification.jsp</file>
-            <file>file:/C:/Users/pitit/Documents/GitHub/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/src/java/models/DataAccess.java</file>
-            <file>file:/C:/Users/pitit/Documents/GitHub/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/web/ajout.jsp</file>
-            <file>file:/C:/Users/pitit/Documents/GitHub/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/src/java/servlet/PurchaseToUpdateToJSON.java</file>
-            <file>file:/C:/Users/pitit/Documents/GitHub/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/src/java/servlet/UpdateOrderController.java</file>
-            <file>file:/C:/Users/pitit/Documents/GitHub/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/web/js/updateOrder.js</file>
-            <file>file:/C:/Users/pitit/Documents/GitHub/MiniProjet_Bouchon-Puyjalon/MiniProjet_Bouchon_Puyjalon/src/java/servlet/ProductInfoToJSON.java</file>
+            <file>file:/C:/Users/vince/Documents/FAC/Java/FINAL/MiniProjet_Bouchon_Puyjalon/web/css/style.css</file>
+            <file>file:/C:/Users/vince/Documents/FAC/Java/FINAL/MiniProjet_Bouchon_Puyjalon/web/connection.jsp</file>
+            <file>file:/C:/Users/vince/Documents/FAC/Java/FINAL/MiniProjet_Bouchon_Puyjalon/web/entete.jsp</file>
+            <file>file:/C:/Users/vince/Documents/FAC/Java/FINAL/MiniProjet_Bouchon_Puyjalon/web/accueil.jsp</file>
+            <file>file:/C:/Users/vince/Documents/FAC/Java/FINAL/MiniProjet_Bouchon_Puyjalon/web/googlePieChart.jsp</file>
+            <file>file:/C:/Users/vince/Documents/FAC/Java/FINAL/MiniProjet_Bouchon_Puyjalon/web/googlePieChartCustomer.jsp</file>
         </group>
     </open-files>
 </project-private>

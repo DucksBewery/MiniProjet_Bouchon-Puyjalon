@@ -1,12 +1,15 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@include file="entete.jsp" %>
 <!DOCTYPE html>
 <head>
 	<title>Visualisation des ventes par client</title>
 	<!-- On charge JQuery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<!-- On charge l'API Google -->
+        <link rel="stylesheet" media="screen" type="text/css" href="css/style.css"/>
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 	<script type="text/javascript">
+        
 		google.load("visualization", "1", {packages: ["corechart"]});
 
 		// Après le chargement de la page, on fait l'appel AJAX
@@ -53,7 +56,6 @@
 <body>
 	<h1>Statistiques : ventes par client</h1>
 	<a href='salesByCustomer' target="_blank">Voir les données brutes</a><br>
-        <a href="accueil.jsp" name='action' value='accueil'>Accueil</a>
 	<!-- Le graphique apparaît ici -->
 	<div id="piechart" style="width: 900px; height: 500px;"></div>
 </body>

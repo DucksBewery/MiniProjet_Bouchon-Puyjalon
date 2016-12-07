@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.sql.DataSource;
 
 public class DataAccess {
@@ -228,5 +230,65 @@ public class DataAccess {
 
         return produit;
     }
+    
+    /**
+	 * ventes par client
+	 *
+	 * @return Une Map associant le nom du client à son chiffre d'affaires
+	 * @throws SQLException
+	 */
+	public Map<String, Double> salesByCustomer() throws SQLException {
+		Map<String, Double> result = new HashMap<>();
+		String sql = "SELECT NAME, SUM(PURCHASE_COST * QUANTITY) AS SALES" +
+		"	      FROM CUSTOMER c" +
+		"	      INNER JOIN PURCHASE_ORDER o ON (c.CUSTOMER_ID = o.CUSTOMER_ID)" +
+		"	      INNER JOIN PRODUCT p ON (o.PRODUCT_ID = p.PRODUCT_ID)" +
+		"	      GROUP BY NAME";
+		try (Connection connection = myDataSource.getConnection(); 
+		     Statement stmt = connection.createStatement(); 
+		     ResultSet rs = stmt.executeQuery(sql)) {
+			while (rs.next()) {
+				// On récupère les champs nécessaires de l'enregistrement courant
+				String name = rs.getString("NAME");
+				double sales = rs.getDouble("SALES");
+				// On l'ajoute à la liste des résultats
+				result.put(name, sales);
+			}
+		}
+		return result;
+	}
+        
+        /**
+	 * ventes par client
+	 *
+     * @param customerId
+	 * @return Une Map associant le nom du client à son chiffre d'affaires
+	 * @throws SQLException
+	 */
+	public Map<String, Double> salesByOneCustomer(int customerId) throws SQLException {
+		Map<String, Double> result = new HashMap<>();
+                    
+
+		String sql = "SELECT SUM(po.QUANTITY) AS SALES, p.DESCRIPTION" +
+		"	      FROM PURCHASE_ORDER po" +
+		"	      INNER JOIN PRODUCT p ON (po.PRODUCT_ID = p.PRODUCT_ID)" +
+		"	      WHERE po.CUSTOMER_ID = ? GROUP BY p.DESCRIPTION";
+		try (Connection connection = myDataSource.getConnection(); 
+		     PreparedStatement stmt = connection.prepareStatement(sql)){ 
+		     stmt.setInt(1, customerId);
+                        try ( // Un ResultSet pour parcourir les enregistrements du résultat
+                        ResultSet rs = stmt.executeQuery()) {
+                                while(rs.next()) {
+                                    // On récupère les champs nécessaires de l'enregistrement courant
+                                    String name = rs.getString("DESCRIPTION");
+                                    double sales = rs.getDouble("SALES");
+                                    // On l'ajoute à la liste des résultats
+                                    result.put(name, sales);
+                                }
+                        }
+                        catch(SQLException e){System.out.println("PROBLEME : "+e);}
+		}
+		return result;
+	}
     
 }

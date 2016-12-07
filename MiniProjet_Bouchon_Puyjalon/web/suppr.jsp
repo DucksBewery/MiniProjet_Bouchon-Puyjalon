@@ -6,7 +6,6 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="entete.jsp" %>
-    <body>
         <h1>Suppression d'un bon de commande</h1>
         <form action="PurchaseOrderController" method="POST">
             <select>${listeBonCommande}</select>
