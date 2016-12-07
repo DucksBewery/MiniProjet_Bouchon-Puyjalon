@@ -1,6 +1,5 @@
 package models;
 
-
 public class PurchaseOrder {
 
     private int purchaseId;
@@ -12,11 +11,19 @@ public class PurchaseOrder {
     private String salesDate;
     private String freightCompany;
 
+    /**
+     * Constructeur
+     * 
+     * @param customer 
+     */
     public PurchaseOrder(int customer) {
         this.customer = customer;
     }
 
-    //------------- GETTERS ---------------//    
+    // -----------------------------------------------------------------------//
+    // --------------------------- GETTERS -----------------------------------//
+    // -----------------------------------------------------------------------//
+    
     /**
      * @return the customer
      */
@@ -73,7 +80,10 @@ public class PurchaseOrder {
         return purchaseId;
     }
 
-    //------------- SETTERS ---------------//
+    // -----------------------------------------------------------------------//
+    // --------------------------- GETTERS -----------------------------------//
+    // -----------------------------------------------------------------------//
+    
     /**
      * @param customer the customer to set
      */

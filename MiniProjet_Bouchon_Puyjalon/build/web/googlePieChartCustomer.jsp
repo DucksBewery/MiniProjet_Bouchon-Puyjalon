@@ -59,7 +59,7 @@
     <div class="container-fluid">
         <h1>Statistiques de ${utilisateur.name}</h1>
         <input type="hidden" id="idCustomer" value="${utilisateur.customerId}">
-        <a href='salesByOneCustomer?customerId=1' target="_blank">Voir les données brutes</a><br>
+        <a href='salesByOneCustomer?customerId=${utilisateur.customerId}' target="_blank">Voir les données brutes</a><br>
         <!-- Le graphique apparaît ici -->
         <div id="piechart" style="width: 900px; height: 500px;"></div>
     </div>

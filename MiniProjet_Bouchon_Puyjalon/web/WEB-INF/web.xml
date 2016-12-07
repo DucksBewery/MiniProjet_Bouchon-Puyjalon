@@ -5,12 +5,12 @@
         <listener-class>listeners.CountingUsers</listener-class>
     </listener>
     <servlet>
-	<servlet-name>AuthentificationController</servlet-name>
-	<servlet-class>servlet.AuthentificationController</servlet-class>
+        <servlet-name>AuthentificationController</servlet-name>
+        <servlet-class>servletController.AuthentificationController</servlet-class>
     </servlet>
     <servlet-mapping>
-	<servlet-name>AuthentificationController</servlet-name>
-	<url-pattern>/AuthentificationController</url-pattern>
+        <servlet-name>AuthentificationController</servlet-name>
+        <url-pattern>/AuthentificationController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

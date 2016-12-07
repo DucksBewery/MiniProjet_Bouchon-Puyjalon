@@ -13,7 +13,6 @@
         <a href="accueil.jsp"><button type="button" class="btn">Annuler</button></a>
         </div>
     </form>
-        <script type="text/javascript" src="js/deleteOrder.js"></script>
         </div>
 </body>
 </html>

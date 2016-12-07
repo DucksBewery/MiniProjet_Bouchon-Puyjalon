@@ -30,7 +30,7 @@
     </div>
     <p id="erreur"></p>
 
-    <script type="text/javascript" src="js/updateOrder.js"></script>
+    <script type="text/javascript" src="js/orderUpdate.js"></script>
 </div>
 </body>
 

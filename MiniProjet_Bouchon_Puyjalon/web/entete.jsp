@@ -1,9 +1,3 @@
-<%-- 
-    Document   : entete
-    Created on : 17 nov. 2016, 16:11:07
-    Author     : Margot Puyjalon
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -22,7 +16,7 @@
             <div class="col-sm-5"><p id="messageInfo"> ${message}</p></div>
             <div class="col-sm-2">
 
-                <form class="form-inline" method="POST" action="AuthentificationController"> <!-- l'action par dÃ©faut est l'URL courant, qui va rappeler la servlet -->
+                <form class="form-inline" method="POST" action="AuthentificationController">
                     <a href="accueil.jsp" name='action' value='accueil'><button type="button" class="btn btn-info">Accueil</button></a>
                     <button type="submit" class="btn btn-primary" name='action' value='logout'>Deconnexion</button> 
                 </form>

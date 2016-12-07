@@ -2,19 +2,29 @@ package models;
 
 /**
  * Correspond à un enregistrement de la table Customer
- * @author puyjalon bouchon
  */
 public class Customer {
-	// TODO : ajouter les autres propriétés
+
 	private int customerId;
 	private String name;
 	private String addressLine1;
 
+        /**
+         * Constructeur
+         * 
+         * @param customerId
+         * @param name
+         * @param addressLine1 
+         */
 	public Customer(int customerId, String name, String addressLine1) {
 		this.customerId = customerId;
 		this.name = name;
 		this.addressLine1 = addressLine1;
 	}
+        
+    // -----------------------------------------------------------------------//
+    // --------------------------- GETTERS -----------------------------------//
+    // -----------------------------------------------------------------------//
 
 	/**
 	 * Get the value of customerId
@@ -42,17 +52,35 @@ public class Customer {
 	public String getAddressLine1() {
 		return addressLine1;
 	}
-
         
+    // -----------------------------------------------------------------------//
+    // --------------------------- SETTERS -----------------------------------//
+    // -----------------------------------------------------------------------//
+
+        /**
+         * Set the value of customerId
+         * 
+         * @param id 
+         */
         public void setCustomerId(int id){
             this.customerId = id;
         }
         
-        public void setName(String nom){
-            this.name = nom;
+        /**
+         * Set the value of name
+         * 
+         * @param name 
+         */
+        public void setName(String name){
+            this.name = name;
         }
         
-        public void setAddressLine1(String address){
-           this.addressLine1 = address;
+        /**
+         * Set the value of addressLine1
+         * 
+         * @param addressLine1 
+         */
+        public void setAddressLine1(String addressLine1){
+           this.addressLine1 = addressLine1;
         }
 }

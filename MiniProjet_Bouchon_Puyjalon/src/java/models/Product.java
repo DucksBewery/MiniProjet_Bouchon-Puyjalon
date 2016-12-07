@@ -1,20 +1,28 @@
 package models;
 
-
 public class Product {
+
+    private String description;
+    private int productId;
+    private String manufacturer;
+    private String productType;
+    private float productCost;
+    private float productRate;
+    private int quantityInStock;
+
+    /**
+     * Constructeur
+     *
+     * @param productId
+     */
+    public Product(int productId) {
+        this.productId = productId;
+    }
+
+    // -----------------------------------------------------------------------//
+    // --------------------------- GETTERS -----------------------------------//
+    // -----------------------------------------------------------------------//
     
-	private String description;
-        private int productId;
-        private String manufacturer;
-        private String productType;
-        private float productCost;
-        private float productRate;
-        private int quantityInStock;
-
-	public Product(int productId) {
-                this.productId = productId;
-	}
-
     /**
      * @return the description
      */
@@ -49,7 +57,7 @@ public class Product {
     public float getProductCost() {
         return productCost;
     }
-    
+
     /**
      * @return the productRate
      */
@@ -64,6 +72,10 @@ public class Product {
         return quantityInStock;
     }
 
+    // -----------------------------------------------------------------------//
+    // --------------------------- SETTERS -----------------------------------//
+    // -----------------------------------------------------------------------//
+    
     /**
      * @param description the description to set
      */
@@ -98,7 +110,7 @@ public class Product {
     public void setProductCost(float productCost) {
         this.productCost = productCost;
     }
-    
+
     /**
      * @param productRate the productCost to set
      */
@@ -112,5 +124,5 @@ public class Product {
     public void setQuantityInStock(int quantityInStock) {
         this.quantityInStock = quantityInStock;
     }
-    
+
 }

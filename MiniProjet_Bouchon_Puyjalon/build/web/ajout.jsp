@@ -1,4 +1,3 @@
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="entete.jsp" %>
 <div class="container-fluid">
@@ -30,7 +29,7 @@
 
         <p id="erreur"></p>
 
-        <script type="text/javascript" src="js/addOrder.js"></script>
+        <script type="text/javascript" src="js/orderAdd.js"></script>
 
     </div>
 </body>

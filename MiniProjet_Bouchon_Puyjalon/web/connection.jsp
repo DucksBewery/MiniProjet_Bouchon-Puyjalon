@@ -6,7 +6,6 @@
         <!-- On charge JQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <link rel="stylesheet" media="screen" type="text/css" href="css/bootstrap.min.css"/>
-        <!-- On charge l'API Google -->
         <link rel="stylesheet" media="screen" type="text/css" href="css/style.css"/>
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     </head>

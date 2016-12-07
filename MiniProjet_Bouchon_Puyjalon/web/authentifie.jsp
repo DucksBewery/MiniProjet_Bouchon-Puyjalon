@@ -10,7 +10,7 @@
     <body>
         <div class="container-fluid">
             <h1>Connection réussie!</h1>
-            <h2>Vous êtes connectés avec le compte de ${utilisateur.name} et le mot de passe ${utilisateur.customerId}</h2>
+            <h2>Vous êtes connectés avec le compte de ${utilisateur.name}</h2>
             Redirection vers la page d'accueil dans 5 secondes...
             Ou cliquez sur <a href="accueil.jsp">Accueil</a>
         </div>
