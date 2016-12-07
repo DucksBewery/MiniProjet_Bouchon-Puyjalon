@@ -13,7 +13,7 @@
     <body>
         
         <div id="entete" class="container-fluid">
-            trolo
+           <div class="col-sm-5" id="nomDuSIte">V/M Master BDC</div>
         </div>
         
         <div style="color:red">${messageErreur}</div>

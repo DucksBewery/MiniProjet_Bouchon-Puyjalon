@@ -15,11 +15,10 @@ function fillUpdatablePurchase() {
                 function (result) {
                     $("#myPurchaseList").empty();
                     $("#myPurchaseList").append("<tr>" +
-                            "<td>Produit</td>" +
-                            "<td>Quantit&eacute;</td>" +
-                            "<td>Co&ucirc;t total</td>" +
-                            "<td></td>" +
-                            "<td></td>" +
+                            "<th class='colonnesTableauAccueil'>Produit</td>" +
+                            "<th class='colonnesTableauAccueil'>Quantit&eacute;</td>" +
+                            "<th class='colonnesTableauAccueil'>Co&ucirc;t total</td>" +
+                            "<th colspan='2' class='colonnesTableauAccueil'></td>" +
                             "</tr>");
                     $.each(result,
                             function (key) {
@@ -30,21 +29,20 @@ function fillUpdatablePurchase() {
                                 var quantity = result[key]["quantity"];
                                 var cost = result[key]["cost"];
                                 var purchases = "<tr>" +
-                                        "<td>" + product + "</td>" +
-                                        "<td>" + quantity + "</td>" +
-                                        "<td>" + cost + "</td>" +
-                                        "<td>" +
-                                            "<form action='UpdateOrderController' method='POST'>" +
-                                                "<input type='hidden' name='purchaseId' value='" + purchaseId + "'>" +
-                                                "<input type='hidden' name='productId' value='" + productId + "'>" +
-                                                "<button type='submit' name='action' value='Modifier' class='btn btn-warning'>Modifier</button>" +
-                                            "</form>" +
-                                            "<form action='DeletePurchaseController' method='POST'>" +
-                                                "<input type='hidden' name='purchaseId' value='" + purchaseId + "'>" +
-                                                "<input type='hidden' name='productId' value='" + productId + "'>" +
-                                                "<input type='hidden' name='quantity' value='" + quantity + "'>" +
-                                                "<button type='submit' name='action' value='Supprimer' class='btn btn-danger'>Supprimer</button>" +
-                                            "</form>"+
+                                        "<td class='colonnesTableauAccueil'>" + product + "</td>" +
+                                        "<td class='colonnesTableauAccueil'>" + quantity + "</td>" +
+                                        "<td class='colonnesTableauAccueil'>" + cost + "</td>" +
+                                        "<td><form action='UpdateOrderController' method='POST'>" +
+                                        "<input type='hidden' name='purchaseId' value='" + purchaseId + "'>" +
+                                        "<input type='hidden' name='productId' value='" + productId + "'>" +
+                                        "<button type='submit' name='action' value='Modifier' class='btn btn-warning'>Modifier</button>" +
+                                        "</form></td>" +
+                                        "<td><form action='DeletePurchaseController' method='POST'>" +
+                                        "<input type='hidden' name='purchaseId' value='" + purchaseId + "'>" +
+                                        "<input type='hidden' name='productId' value='" + productId + "'>" +
+                                        "<input type='hidden' name='quantity' value='" + quantity + "'>" +
+                                        "<button type='submit' name='action' value='Supprimer' class='btn btn-danger'>Supprimer</button>" +
+                                        "</form></td>" +
                                         "</tr>";
                                 $("#myPurchaseList").append(purchases);
                             }
