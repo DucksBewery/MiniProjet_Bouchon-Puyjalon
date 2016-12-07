@@ -23,10 +23,10 @@ import models.DataAccess;
  *
  * @author Margot
  */
-@WebServlet(name = "UpdateOrderController", urlPatterns = {"/UpdateOrderController"})
-public class UpdateOrderController extends HttpServlet {
+@WebServlet(name = "DeletePurchaseController", urlPatterns = {"/DeletePurchaseController"})
+public class DeletePurchaseController extends HttpServlet {
 
-   public DataSource getDataSource() throws SQLException {
+    public DataSource getDataSource() throws SQLException {
         org.apache.derby.jdbc.ClientDataSource ds = new org.apache.derby.jdbc.ClientDataSource();
         ds.setDatabaseName("sample");
         ds.setUser("app");
@@ -54,11 +54,11 @@ public class UpdateOrderController extends HttpServlet {
         String jspView = "accueil.jsp";
         if (null != action) {
             switch (action) {
-                case "confirmModif":
-                    if (updatePurchaseOrderController(request)) {
-                        request.setAttribute("message", "La modification de votre bon de commande a bien été pris en compte.");
+                case "Supprimer":
+                    if (deletePurchaseOrderController(request)) {
+                        request.setAttribute("message", "Votre commande a bien été suprimée.");
                     } else {
-                        request.setAttribute("message", "Le bon de commande ne s'est pas enregistré correctement.");
+                        request.setAttribute("message", "La suppression ne s'est pas effectuée correctement.");
                     }
                     break;
             }
@@ -67,24 +67,25 @@ public class UpdateOrderController extends HttpServlet {
 
     }
 
-    private boolean updatePurchaseOrderController(HttpServletRequest request) {
+    private boolean deletePurchaseOrderController(HttpServletRequest request) {
         boolean test = false;
         try {
             // Créér le DAO avec sa source de données
             DataAccess dao = new DataAccess(getDataSource());
             // On récupère les paramètres de la requête
             String purchaseId = request.getParameter("purchase");
-            String productID = request.getParameter("productId");
-            String quantity = request.getParameter("qtt");
-            String productCost = request.getParameter("productCost");
-            String rate = request.getParameter("productRate");
-            String freightCompany = request.getParameter("delivery"); 
-            String quantityMax = request.getParameter("quantityMax");
+            String productId = request.getParameter("productId");
+            String quantity = request.getParameter("quantity");
             
-            float costWithoutRate = parseFloat(productCost)*parseFloat(quantity);
-            float totalCost = costWithoutRate - ((costWithoutRate * parseFloat(rate))/100);
+            System.out.println("VARIABLES ICI !!!!!!!! PurchaseId : "+purchaseId +" ProductId : "+ productId +" Quantity : "+ quantity);
+            
+            boolean testFirst = dao.deletePurchaseOrder(Integer.parseInt(purchaseId));
+            boolean testScnd = dao.refillProduct(Integer.parseInt(productId),Integer.parseInt(quantity));
+            
+            if(testFirst && testScnd){
+                test = true;
+            }
 
-            test = dao.updatePurchaseOrder(Integer.parseInt(purchaseId), Integer.parseInt(productID), Integer.parseInt(quantity), totalCost, freightCompany, Integer.parseInt(quantityMax));
         } catch (Exception ex) {
             Logger.getLogger("MiniProjet_Bouchon_Puyjalon").log(Level.SEVERE, "SQL Exception", ex);
         }

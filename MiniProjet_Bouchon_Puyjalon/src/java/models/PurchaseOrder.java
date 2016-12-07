@@ -6,6 +6,7 @@ public class PurchaseOrder {
     private int purchaseId;
     private int customer;
     private String product;
+    private int productId;
     private int quantity;
     private float cost;
     private String salesDate;
@@ -28,6 +29,13 @@ public class PurchaseOrder {
      */
     public String getProduct() {
         return product;
+    }
+    
+    /**
+     * @return the productId
+     */
+    public int getProductId() {
+        return productId;
     }
 
     /**
@@ -78,6 +86,13 @@ public class PurchaseOrder {
      */
     public void setProduct(String product) {
         this.product = product;
+    }
+    
+    /**
+     * @param productId the product to set
+     */
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     /**

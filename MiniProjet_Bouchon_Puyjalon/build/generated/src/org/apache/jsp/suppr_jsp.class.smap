@@ -1,0 +1,16 @@
+SMAP
+suppr_jsp.java
+JSP
+*S JSP
+*F
++ 0 suppr.jsp
+suppr.jsp
++ 1 entete.jsp
+entete.jsp
+*L
+1:49
+5#1,13:50
+2#0,5:62
+7:67,3
+8,8:70
+*E

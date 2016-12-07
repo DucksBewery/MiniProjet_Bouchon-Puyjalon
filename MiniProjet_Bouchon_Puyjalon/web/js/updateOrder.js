@@ -1,9 +1,9 @@
 $(document).ready(// Exécuté à la fin du chargement de la page
         function () {
-            fillUpdatablePurchase();
             fillFreightCompanies();
+            fillUpdatablePurchase();
             $("#purchaseList").change(fillSelectors);
-            $("#quantityUpdated").change(changeDetails);
+            $("#quantityUpdated").change(showPurchaseDetails);
         }
 );
 
@@ -23,21 +23,17 @@ function fillUpdatablePurchase() {
                                 // On ajoute une option dans le select
                                 var purchase = result[key]["purchaseId"];
                                 var product = result[key]["product"];
+                                var productId = result[key]["productId"];
                                 var quantity = result[key]["quantity"];
                                 var cost = result[key]["cost"];
                                 var option = new Option(product + ",    x" + quantity + ",    " + cost + "€", purchase);
                                 select.append($(option));
+                                $('#productId').val(productId);
                             }
                     );
-                    fillSelectors(result[0]["product"],result[0]["quantity"],result[0]["freightCompany"]);
+                    fillSelectors();
                 }
     });
-}
-
-function fillSelectors(product,quantity,company){
-    $("#productList").val(product);
-    $("#quantityUpdated").val(quantity);
-    $("#deliveryList").val(company);
 }
 
 function fillFreightCompanies() {
@@ -61,30 +57,27 @@ function fillFreightCompanies() {
     });
 }
 
-function fillAvailableProducts() {
+function fillSelectors() {
+    var selected = $("#purchaseList").val();
     $.ajax({
-        url: "availableProducts",
+        url: "SelectorsToJSON",
+        data: {"select": selected},
         dataType: "json",
         error: showError,
         success: // La fonction qui traite les résultats
                 function (result) {
-                    var select = $('#productList');
-                    $.each(result,
-                            function (key) {
-                                // On ajoute une option dans le select
-                                var productCode = result[key]["productId"];
-                                var productDesc = result[key]["description"];
-                                var option = new Option(productDesc, productCode);
-                                select.append($(option));
-                            }
-                    );
+                    $("#product").empty();
+                    $("#product").append(result[0]);
+                    $("#quantityUpdated").val(result[1]);
+                    $("#purchaseQuantity").val(result[1]);
+                    $("#deliveryList").val(result[2]);
                     showPurchaseDetails();
                 }
     });
 }
 
 function showPurchaseDetails() {
-    var selectedProduct = $("#purchaseList").val();
+    var selectedProduct = $("#productId").val();
     $.ajax({
         url: "productInfoToJSON",
         data: {"prod": selectedProduct},
@@ -92,61 +85,39 @@ function showPurchaseDetails() {
         success: // La fonction qui traite les résultats
                 function (result) {
                     $("#infoOrder").empty();
-                    $("#quantite").val(1);
+                    var qtt = parseInt($("#quantityUpdated").val());
+                    var max = result["quantityInStock"] + parseInt($("#purchaseQuantity").val());
                     var productCost = result["productCost"];
-                    var purchaseCost = result["purchaseCost"];
                     var rate = result["productRate"];
-                    var total = (productCost + purchaseCost) - rate;
-                    var info = "<p>Produit sélectionné : " + result["description"] + "</p>" +
-                            "<p>Type : " + result["productType"] + "</p>" +
-                            "<p>Constructeur : " + result["manufacturer"] + "</p>" +
-                            "<p id='quantiteProd'>Quantité : 1</p>" +
-                            "<p id='prixProd'>Prix du produit : " + productCost + "€</p>" +
-                            "<p id='prixCommande'>Prix de la commande : " + purchaseCost + "€</p>" +
-                            "<p id='remise'>Remise : " + rate + "€</p>" +
-                            "<p id='total'>Total à payer : " + total + "€</p>";
+                    var total = (productCost * qtt) - (((productCost * qtt) * rate) / 100);
+                    if (qtt > max) {
+                        var info = "<p>Produit sélectionné : " + result["description"] + "</p>" +
+                                "<p>Type : " + result["productType"] + "</p>" +
+                                "<p>Constructeur : " + result["manufacturer"] + "</p>" +
+                                "<p id='quantiteProd' style='color:red;'>Quantité : Veuillez sélectionner une valeur inférieure ou égale à " + max + "</p>" +
+                                "<p id='prixProd'> Prix du produit :  €</p>" +
+                                "<p id='remise'>Remise : %</p>" +
+                                "<p id='total'>Total à payer : €</p>";
+                    } else {
+                        var info = "<p>Produit sélectionné : " + result["description"] + "</p>" +
+                                "<p>Type : " + result["productType"] + "</p>" +
+                                "<p>Constructeur : " + result["manufacturer"] + "</p>" +
+                                "<p id='quantiteProd'>Quantité : " + qtt + "</p>" +
+                                "<p id='prixProd'>Prix du produit : " + productCost.toFixed(2) + "€</p>" +
+                                "<p id='remise'>Remise : " + rate.toFixed(0) + "%</p>" +
+                                "<p id='total'>Total à payer : " + total.toFixed(2) + "€</p>";
+                    }
                     $("#infoOrder").append(info);
                     $("#productName").val(result["description"]);
                     $("#manufacturer").val(result["manufacturer"]);
                     $("#productType").val(result["productType"]);
-                    $("#productCost").val(result["productCost"]);
-                    $("#quantityMax").val(result["quantityInStock"]);
-                    $("#productRate").val(result["productRate"]);
-                    $("#purchaseCost").val(result["purchaseCost"]);
-                    $("#quantity").attr({"max": result["quantityInStock"]});
+                    $("#productCost").val(productCost);
+                    $("#quantityMax").val(max);
+                    $("#productRate").val(rate);
+                    $("#quantity").attr({"max": max});
                 },
         error: showError
     });
-}
-
-function changeDetails() {
-    $("#infoOrder").empty();
-    var qtt = parseInt($("#quantity").val());
-    var max = parseInt($("#quantity").attr("max"));
-    var productCost = parseFloat($("#productCost").val());
-    var purchaseCost = parseFloat($("#purchaseCost").val());
-    var rate = parseFloat($("#productRate").val());
-    var total = (productCost * qtt + purchaseCost) - rate;
-    if (qtt > max) {
-        var info = "<p>Produit sélectionné : " + $("#productName").val() + "</p>" +
-                "<p>Type : " + $("#productType").val() + "</p>" +
-                "<p>Constructeur : " + $("#manufacturer").val() + "</p>" +
-                "<p id='quantiteProd' style='color:red;'>Quantité : Veuillez sélectionner une valeur inférieure ou égale à " + max + "</p>" +
-                "<p id='prixProd'> Prix du produit :  €</p>" +
-                "<p id='prixProd'> Prix de la commande :  €</p>" +
-                "<p id='remise'>Remise : €</p>" +
-                "<p id='total'>Total à payer : €</p>";
-    } else {
-        var info = "<p>Produit sélectionné : " + $("#productName").val() + "</p>" +
-                "<p>Type : " + $("#productType").val() + "</p>" +
-                "<p>Constructeur : " + $("#manufacturer").val() + "</p>" +
-                "<p id='quantiteProd'>Quantité : " + qtt + "</p>" +
-                "<p id='prixProd'> Prix du produit : " + productCost + "€</p>" +
-                "<p id='prixProd'> Prix de la commande : " + purchaseCost + "€</p>" +
-                "<p id='remise'>Remise : " + rate + "€</p>" +
-                "<p id='total'>Total à payer : " + total + "€</p>";
-    }
-    $("#infoOrder").append(info);
 }
 
 // Fonction qui traite les erreurs de la requête
