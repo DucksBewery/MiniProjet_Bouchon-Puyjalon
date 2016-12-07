@@ -55,6 +55,12 @@ public class DeletePurchaseController extends HttpServlet {
         if (null != action) {
             switch (action) {
                 case "Supprimer":
+                    request.setAttribute("purchaseId",request.getParameter("purchaseId"));
+                    request.setAttribute("productId",request.getParameter("productId"));
+                    request.setAttribute("quantity",request.getParameter("quantity"));
+                    jspView = "suppr.jsp";
+                    break;
+                case "confirmSuppr":
                     if (deletePurchaseOrderController(request)) {
                         request.setAttribute("message", "Votre commande a bien été suprimée.");
                     } else {
@@ -73,11 +79,9 @@ public class DeletePurchaseController extends HttpServlet {
             // Créér le DAO avec sa source de données
             DataAccess dao = new DataAccess(getDataSource());
             // On récupère les paramètres de la requête
-            String purchaseId = request.getParameter("purchase");
+            String purchaseId = request.getParameter("purchaseId");
             String productId = request.getParameter("productId");
             String quantity = request.getParameter("quantity");
-            
-            System.out.println("VARIABLES ICI !!!!!!!! PurchaseId : "+purchaseId +" ProductId : "+ productId +" Quantity : "+ quantity);
             
             boolean testFirst = dao.deletePurchaseOrder(Integer.parseInt(purchaseId));
             boolean testScnd = dao.refillProduct(Integer.parseInt(productId),Integer.parseInt(quantity));

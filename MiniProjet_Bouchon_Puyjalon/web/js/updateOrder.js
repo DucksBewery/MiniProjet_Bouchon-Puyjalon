@@ -1,40 +1,11 @@
 $(document).ready(// Exécuté à la fin du chargement de la page
         function () {
             fillFreightCompanies();
-            fillUpdatablePurchase();
+            fillSelectors();
             $("#purchaseList").change(fillSelectors);
             $("#quantityUpdated").change(showPurchaseDetails);
         }
 );
-
-function fillUpdatablePurchase() {
-    var customerId = parseInt($("#userId").val());
-    $.ajax({
-        url: "purchaseToUpdate",
-        data: {"customer": customerId},
-        dataType: "json",
-        error: showError,
-        success: // La fonction qui traite les résultats
-                function (result) {
-                    var select = $('#purchaseList');
-                    // Pour chaque état dans le résultat
-                    $.each(result,
-                            function (key) {
-                                // On ajoute une option dans le select
-                                var purchase = result[key]["purchaseId"];
-                                var product = result[key]["product"];
-                                var productId = result[key]["productId"];
-                                var quantity = result[key]["quantity"];
-                                var cost = result[key]["cost"];
-                                var option = new Option(product + ",    x" + quantity + ",    " + cost + "€", purchase);
-                                select.append($(option));
-                                $('#productId').val(productId);
-                            }
-                    );
-                    fillSelectors();
-                }
-    });
-}
 
 function fillFreightCompanies() {
     $.ajax({
@@ -58,7 +29,7 @@ function fillFreightCompanies() {
 }
 
 function fillSelectors() {
-    var selected = $("#purchaseList").val();
+    var selected = $("#purchaseId").val();
     $.ajax({
         url: "SelectorsToJSON",
         data: {"select": selected},

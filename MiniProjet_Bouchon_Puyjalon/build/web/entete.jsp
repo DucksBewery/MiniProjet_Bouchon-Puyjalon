@@ -18,7 +18,7 @@
     <body>
         <div id="entete" class="container-fluid">
             <form class="form-inline" method="POST" action="AuthentificationController"> <!-- l'action par dÃ©faut est l'URL courant, qui va rappeler la servlet -->
-                <button type="submit" class="btn btn-danger" name='action' value='logout'>Deconnexion</button>
                 <a href="accueil.jsp" name='action' value='accueil'><button type="button" class="btn btn-warning">Accueil</button></a>
+                <button type="submit" class="btn btn-danger" name='action' value='logout'>Deconnexion</button> 
             </form>
         </div>

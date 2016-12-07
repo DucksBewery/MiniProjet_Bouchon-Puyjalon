@@ -1,23 +1,15 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@include file="entete.jsp" %>
-<<<<<<< HEAD
-        <h1>Suppression d'un bon de commande</h1>
-        <form action="PurchaseOrderController" method="POST">
-            <select>${listeBonCommande}</select>
-            <input type="submit" name="submit" value="Supprimer">
-        </form>
-    </body>
-=======
 <body>
-    <h1>Suppression d'un bon de commande</h1>
+    <h1>Voulez vous vraiment supprimer votre commande ?</h1>
     <form action="DeletePurchaseController" method="POST">
-        <select id="purchaseList" name="purchase"></select>
         <input type="hidden" name="userId" id="userId" value="${utilisateur.customerId}">
-        <input type="hidden" id="productId" name="productId" value="">
-        <input type="hidden" id="quantity" name="quantity" value="">
-        <input type="submit" name="action" value="Supprimer">  
+        <input type="hidden" name="purchaseId" id="purchaseId" value="${purchaseId}">
+        <input type="hidden" name="productId" id="productId" value="${productId}">
+        <input type="hidden" name="quantity" id="quantity" value="${quantity}">
+        <input type="submit" name="action" value="confirmSuppr">
+        <a href="accueil.jsp"><button type="button" class="btn">Annuler</button></a>
     </form>
         <script type="text/javascript" src="js/deleteOrder.js"></script>
 </body>
->>>>>>> origin/master
 </html>
